@@ -9,7 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface KKChartView : UIView
+//是否显示网格
 @property (nonatomic,assign) BOOL isShowGrid;
-@property (nonatomic,strong) UIColor *gridColor;
--(instancetype)initWithFrame:(CGRect)frame withGrid:(BOOL)showBackgroundGrid;
+//曲线颜色，默认红色
+@property (nonatomic,strong) UIColor *curveColor;
+//曲线数据源，NSNumber类型
+@property (nonatomic,strong) NSMutableArray *dataArray;
+-(instancetype)initWithFrame:(CGRect)frame;
+-(instancetype)initWithFrame:(CGRect)frame withArray:(NSMutableArray *)array;
+-(void)setDataArray:(NSMutableArray *)array;
 @end
