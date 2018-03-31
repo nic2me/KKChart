@@ -8,7 +8,7 @@
 #define screen_width self.view.bounds.size.width
 #import "ViewController.h"
 #import "KKChartView.h"
-@interface ViewController ()
+@interface ViewController ()<KKChartViewDelegate>
 @property (nonatomic,strong) KKChartView *chartView;
 @property (nonatomic,strong) UIButton   *button;
 @end
@@ -32,8 +32,10 @@
     //以下两种初始化方式都可以
 //    _chartView = [[KKChartView alloc] initWithFrame:CGRectMake(position_x, position_y, screen_width-2*position_x, height)];
     _chartView = [[KKChartView alloc] initWithFrame:CGRectMake(position_x, position_y, screen_width-2*position_x, height) withArray:[self randomArray]];
+    _chartView.delegate = self;
     [self.view addSubview:_chartView];
 }
+
 -(NSMutableArray *)randomArray
 {
     NSMutableArray *array = [NSMutableArray array];
@@ -49,5 +51,21 @@
     [_chartView setDataArray:[self randomArray]];
     //_chartView.curveColor = [UIColor blueColor];
     //_chartView.isShowGrid = NO;
+}
+
+
+
+#pragma mark chart delegate
+-(void)moveLineView:(KKChartView *)chartView
+{
+    [_chartView.lineView setCenter:CGPointMake(chartView.lineView.center.x, chartView.lineView.center.y)];
+}
+-(void)beginTouch
+{
+    
+}
+-(void)endTouch
+{
+    
 }
 @end

@@ -163,4 +163,65 @@
     retPoint.y = self.frame.size.height-(value-minVerticalValue)* verticalItemHeight;
     return retPoint;
 }
+
+
+#pragma mark 生成可移动竖线。及其代理方法
+-(void)drawValueLine:(float)position_x
+{
+    if(!self.lineView)
+    {
+        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(.0f,.0f,1.0f,self.frame.size.height)];
+        lineView.backgroundColor = [UIColor blackColor];
+        self.lineView = lineView;
+        [self addSubview:self.lineView];
+    }
+    CGRect lineViewFrame = self.lineView.frame;
+    lineViewFrame.origin.x = position_x;
+    self.lineView.frame = lineViewFrame;
+    self.lineView.hidden = NO;
+}
+/**
+ *  滑动移动线方法
+ */
+- (void)descriptionViewPointWithTouches:(NSSet *)touches
+{
+    if (_lineView)
+    {
+        CGSize size = self.frame.size;
+        CGPoint location = [[touches anyObject] locationInView:self];
+        
+        if (location.x >= 0 && location.x <= size.width && location.y >= 0 && location.y <= size.height)
+        {
+            [_lineView setCenter:CGPointMake(location.x, _lineView.center.y)];
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(moveLineView:)])
+        {
+            [self.delegate moveLineView:self];
+        }
+    }
+}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    CGPoint location = [[touches anyObject] locationInView:self];
+    [self drawValueLine:location.x];
+    if (!self.dataArray)
+    {
+        return;
+    }
+    [self.delegate beginTouch];
+    [self descriptionViewPointWithTouches:touches];
+}
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.delegate beginTouch];
+    [self descriptionViewPointWithTouches:touches];
+}
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self.delegate endTouch];
+    if(_lineView)
+    {
+        _lineView.hidden = YES;
+    }
+}
 @end
